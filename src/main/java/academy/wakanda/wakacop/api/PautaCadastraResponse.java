@@ -1,10 +1,14 @@
 package academy.wakanda.wakacop.api;
 
-import lombok.Data;
+import academy.wakanda.wakacop.domain.Pauta;
+import lombok.*;
 
 import java.util.UUID;
 
-@Data
+//@Getter
+//@ToString
+@Value
+@Builder
 public class PautaCadastraResponse {
     private UUID id;
 }
