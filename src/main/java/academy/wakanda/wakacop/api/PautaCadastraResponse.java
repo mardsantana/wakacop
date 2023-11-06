@@ -5,10 +5,8 @@ import lombok.*;
 
 import java.util.UUID;
 
-//@Getter
-//@ToString
-@Value
-@Builder
+@Getter
+@ToString
 public class PautaCadastraResponse {
     private UUID id;
 }

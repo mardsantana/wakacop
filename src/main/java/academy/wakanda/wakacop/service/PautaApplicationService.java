@@ -11,15 +11,16 @@ import org.springframework.stereotype.Service;
 @Service
 @Log4j2
 @RequiredArgsConstructor
-public class PautaApplicationService implements  PaultaService{
+public class PautaApplicationService implements PautaService {
 
     private final PautaRepository pautaRepository;
 
     @Override
     public PautaCadastraResponse pautaCriada(NovaPautaRequest novaPauta) {
         log.info("[start] PautaApplicationService - pautaCriada");
+        log.info("[novaPauta] {}", novaPauta);
         Pauta pauta = pautaRepository.save(new Pauta(novaPauta));
         log.info("[finish] PautaApplicationService - pautaCriada");
-        return PautaCadastraResponse.builder().id(pauta.getId()).build();
+        return null;
     }
 }
