@@ -1,7 +1,9 @@
 package academy.wakanda.wakacop.domain;
 
 import academy.wakanda.wakacop.api.NovaPautaRequest;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,6 +11,7 @@ import java.util.UUID;
 
 @Data
 @Entity
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Pauta {
 
     @Id
