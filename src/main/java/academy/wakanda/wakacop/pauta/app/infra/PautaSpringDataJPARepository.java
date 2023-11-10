@@ -1,6 +1,6 @@
-package academy.wakanda.wakacop.infra;
+package academy.wakanda.wakacop.pauta.app.infra;
 
-import academy.wakanda.wakacop.domain.Pauta;
+import academy.wakanda.wakacop.pauta.app.domain.Pauta;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;

@@ -1,4 +1,4 @@
-package academy.wakanda.wakacop.api;
+package academy.wakanda.wakacop.pauta.app.api;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

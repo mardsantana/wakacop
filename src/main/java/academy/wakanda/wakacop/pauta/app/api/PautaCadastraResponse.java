@@ -1,6 +1,6 @@
-package academy.wakanda.wakacop.api;
+package academy.wakanda.wakacop.pauta.app.api;
 
-import academy.wakanda.wakacop.domain.Pauta;
+import academy.wakanda.wakacop.pauta.app.domain.Pauta;
 import lombok.*;
 
 import java.util.UUID;

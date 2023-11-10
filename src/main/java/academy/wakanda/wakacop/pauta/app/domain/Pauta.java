@@ -1,6 +1,6 @@
-package academy.wakanda.wakacop.domain;
+package academy.wakanda.wakacop.pauta.app.domain;
 
-import academy.wakanda.wakacop.api.NovaPautaRequest;
+import academy.wakanda.wakacop.pauta.app.api.NovaPautaRequest;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +20,9 @@ public class Pauta {
     private UUID id;
     private String titulo;
     private String descricao;
+    @Column(name = "id_associado_autor")
     private UUID idAssociadoAutor;
+    @Column(name = "data_criacao")
     private LocalDateTime dataCriacao;
 
     public Pauta(NovaPautaRequest novaPauta) {

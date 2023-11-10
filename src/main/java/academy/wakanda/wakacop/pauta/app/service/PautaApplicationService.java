@@ -1,9 +1,9 @@
-package academy.wakanda.wakacop.service;
+package academy.wakanda.wakacop.pauta.app.service;
 
-import academy.wakanda.wakacop.api.NovaPautaRequest;
-import academy.wakanda.wakacop.api.PautaCadastraResponse;
-import academy.wakanda.wakacop.domain.Pauta;
-import academy.wakanda.wakacop.repository.PautaRepository;
+import academy.wakanda.wakacop.pauta.app.api.NovaPautaRequest;
+import academy.wakanda.wakacop.pauta.app.api.PautaCadastraResponse;
+import academy.wakanda.wakacop.pauta.app.domain.Pauta;
+import academy.wakanda.wakacop.pauta.app.repository.PautaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
