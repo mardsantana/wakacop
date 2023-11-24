@@ -29,7 +29,8 @@ public class PautaApplicationService implements PautaService {
     @Override
     public Pauta getPautaId(UUID idPauta) {
         log.info("[start] PautaApplicationService - getPautaId");
+        Pauta pautaPorId = pautaRepository.buscaPautaPorId(idPauta);
         log.info("[finish] PautaApplicationService - getPautaId");
-        return null;
+        return pautaPorId;
     }
 }

@@ -13,15 +13,15 @@ import org.springframework.stereotype.Service;
 @Service
 @Log4j2
 @RequiredArgsConstructor
-public class SessaoAberturaApplicationService implements SessaoAberturaService{
+public class SessaoVotacaoApplicationService implements SessaoAberturaService{
     private final SessaoVotacaoRepository sessaoVotacaoRepository;
     private final PautaService pautaService;
     @Override
     public SessaoAberturaResponse abreSessao(SessaoAberturaRequest sessaoAberturaRequest) {
-        log.info("[start] SessaoAberturaApplicationService - abreSessao");
+        log.info("[start] SessaoVotacaoApplicationService - abreSessao");
         Pauta pauta = pautaService.getPautaId(sessaoAberturaRequest.getIdPauta());
         SessaoVotacao sessaoVotacao = sessaoVotacaoRepository.save(new SessaoVotacao(sessaoAberturaRequest, pauta));
-        log.info("[finish] SessaoAberturaApplicationService - abreSessao");
+        log.info("[finish] SessaoVotacaoApplicationService - abreSessao");
         return new SessaoAberturaResponse(sessaoVotacao);
     }
 }
