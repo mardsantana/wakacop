@@ -34,4 +34,8 @@ public class VotoPauta {
         this.opcaoVoto = votoRequest.getOpcaoVoto();
         this.momentoVoto = LocalDateTime.now();
     }
+
+    public UUID getIdSessao() {
+        return this.sessaoVotacao.getId();
+    }
 }
