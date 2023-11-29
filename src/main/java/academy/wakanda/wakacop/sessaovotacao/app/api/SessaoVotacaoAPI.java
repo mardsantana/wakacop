@@ -12,7 +12,12 @@ public interface SessaoVotacaoAPI {
     @PostMapping("/abertura")
     @ResponseStatus(code = HttpStatus.CREATED)
     SessaoAberturaResponse abreSessao(@RequestBody SessaoAberturaRequest sessaoAberturaRequest);
+
     @PostMapping("/{idSessao}/voto")
     @ResponseStatus(code = HttpStatus.CREATED)
     VotoResponse recebeVoto(@PathVariable UUID idSessao, @RequestBody VotoRequest novoVoto);
+
+    @GetMapping("/{idSessao}/resultado")
+    @ResponseStatus(HttpStatus.OK)
+    ResultadoSessaoResponse obtemResultado(@PathVariable UUID idSessao);
 }
