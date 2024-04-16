@@ -25,7 +25,6 @@ public class PautaApplicationService implements PautaService {
         log.info("[finish] PautaApplicationService - pautaCriada");
         return new PautaCadastraResponse(pauta);
     }
-
     @Override
     public Pauta getPautaId(UUID idPauta) {
         log.info("[start] PautaApplicationService - getPautaId");
