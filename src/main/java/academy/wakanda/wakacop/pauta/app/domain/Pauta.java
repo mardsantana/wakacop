@@ -20,9 +20,7 @@ public class Pauta {
     private UUID id;
     private String titulo;
     private String descricao;
-    @Column(name = "id_associado_autor")
     private UUID idAssociadoAutor;
-    @Column(name = "data_criacao")
     private LocalDateTime dataCriacao;
 
     public Pauta(NovaPautaRequest novaPauta) {
