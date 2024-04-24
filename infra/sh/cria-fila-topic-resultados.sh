@@ -2,4 +2,4 @@ aws --profile localstack --endpoint-url=http://localhost:4566 sqs create-queue -
 
 aws --profile localstack --endpoint-url=http://localhost:4566 sns create-topic --name resultado-sessao-topic
 
-aws --profile localstack --endpoint-url=http://localhost:4566 sns subscribe --topic-arn arn:aws:sns:us-east-1:000000000000:resultado-sessao-topic --protocol sqs --notification-endpoint http://localhost:4566/000000000000/resultado-sessao-mensagem-whatsapp-queue --attributes RawMessageDelivery=true
+aws --profile localstack --endpoint-url=http://localhost:4566 sns subscribe --topic-arn arn:aws:sns:us-east-1:000000000000:resultado-sessao-topic --protocol sqs --notification-endpoint arn:aws:sqs:us-east-1:000000000000:resultado-sessao-mensagem-whats-queue --attributes RawMessageDelivery=true
