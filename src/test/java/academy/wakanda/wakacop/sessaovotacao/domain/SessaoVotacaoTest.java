@@ -1,67 +1,131 @@
 package academy.wakanda.wakacop.sessaovotacao.domain;
 
-import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
-import java.util.Map;
+import academy.wakanda.wakacop.api.VotoRequest;
+import academy.wakanda.wakacop.associado.app.service.AssociadoService;
+import academy.wakanda.wakacop.pauta.app.domain.Pauta;
+import academy.wakanda.wakacop.sessaovotacao.app.api.ResultadoSessaoResponse;
+import academy.wakanda.wakacop.sessaovotacao.app.api.SessaoAberturaRequest;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doNothing;
 
 class SessaoVotacaoTest {
 
-    @Test
-    void deveFecharSessaoQuandoChamarMetodoFechaSessao(){
-        SessaoVotacao sessao = buildeSessao();
-        PublicadorResultadoSessao publicador = new PublicadorResultadoSessaoMockTest();
-        sessao.fechaSessao(publicador);
+    @Mock
+    private AssociadoService associadoService;
 
-        assertEquals(StatusSessaoVotacao.FECHADA,sessao.getStatus());
+    @Mock
+    private PublicadorResultadoSessao publicadorResultadoSessao;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    void deveFecharSessaoQuandoStatusAbertaEMomentoEncerramentoEstiveremNoPassado(){
-        SessaoVotacao sessao = buildeSessao();
-        PublicadorResultadoSessao publicador = new PublicadorResultadoSessaoMockTest();
-        sessao.atualizaStatus(publicador);
-
-        assertEquals(StatusSessaoVotacao.FECHADA,sessao.getStatus());
-    }
-
-    @Test
-    void deveFicarAbertaSessaoQuandoStatusAbertaEMomentoEncerramentoEstiveremNoFuturo(){
-        SessaoVotacao sessao = buildeSessaoEncerramentoFuturo();
-        PublicadorResultadoSessao publicador = new PublicadorResultadoSessaoMockTest();
-        sessao.atualizaStatus(publicador);
-
-        assertEquals(StatusSessaoVotacao.ABERTA,sessao.getStatus());
-    }
-
-    private SessaoVotacao buildeSessaoEncerramentoFuturo() {
-        return SessaoVotacao.builder()
-                .id(UUID.randomUUID())
+    void testSessaoAbertura() {
+        Pauta pauta = Pauta.builder().build();
+        SessaoAberturaRequest aberturaRequest = SessaoAberturaRequest.builder()
                 .idPauta(UUID.randomUUID())
-                .status(StatusSessaoVotacao.ABERTA)
-                .momentoAbertura(LocalDateTime.of(2023,1,1,1,1))
-                .momentoEncerramento(LocalDateTime.MAX)
-                .votos(getVotos())
                 .build();
+
+        SessaoVotacao sessaoVotacao = new SessaoVotacao(aberturaRequest, pauta);
+
+        assertEquals(pauta.getId(), sessaoVotacao.getIdPauta());
+        assertEquals(1, sessaoVotacao.getTempoDuracao());
+        assertNotNull(sessaoVotacao.getMomentoAbertura());
+        assertNotNull(sessaoVotacao.getMomentoEncerramento());
+        assertEquals(StatusSessaoVotacao.ABERTA, sessaoVotacao.getStatus());
+        assertNotNull(sessaoVotacao.getVotos());
+        assertTrue(sessaoVotacao.getVotos().isEmpty());
     }
 
-    private SessaoVotacao buildeSessao() {
-        return SessaoVotacao.builder()
-                .id(UUID.randomUUID())
+    @Test
+    void testRecebeVoto() {
+        Pauta pauta = Pauta.builder().build();
+        SessaoAberturaRequest aberturaRequest = SessaoAberturaRequest.builder()
                 .idPauta(UUID.randomUUID())
-                .status(StatusSessaoVotacao.ABERTA)
-                .momentoAbertura(LocalDateTime.of(2023,1,1,1,1))
-                .momentoEncerramento(LocalDateTime.of(2023,1,1,1,2))
-                .votos(getVotos())
                 .build();
+
+        SessaoVotacao sessaoVotacao = new SessaoVotacao(aberturaRequest, pauta);
+
+        VotoRequest votoRequest = VotoRequest.builder()
+                .cpfAssociado("123456789")
+                .opcaoVoto(OpcaoVoto.SIM)
+                .build();
+
+        VotoPauta votoPauta = sessaoVotacao.recebeVoto(votoRequest, associadoService, publicadorResultadoSessao);
+
+        assertNotNull(votoPauta);
+        assertEquals(sessaoVotacao, votoPauta.getSessaoVotacao());
+        assertEquals(votoRequest.getCpfAssociado(), votoPauta.getCpfAssociado());
+        assertEquals(votoRequest.getOpcaoVoto(), votoPauta.getOpcaoVoto());
+        assertNotNull(votoPauta.getMomentoVoto());
+        assertTrue(sessaoVotacao.getVotos().containsKey(votoRequest.getCpfAssociado()));
     }
 
-    private Map<String, VotoPauta> getVotos() {
-        return Map.of("07785679584",VotoPauta.builder().cpfAssociado("07785679584").opcaoVoto(OpcaoVoto.SIM).build(),
-                "07785679585",VotoPauta.builder().cpfAssociado("07785679585").opcaoVoto(OpcaoVoto.NAO).build());
+    @Test
+    void testValidaAssociado() {
+        Pauta pauta = Pauta.builder().build();
+        SessaoAberturaRequest aberturaRequest = SessaoAberturaRequest.builder()
+                .idPauta(UUID.randomUUID())
+                .build();
+
+        SessaoVotacao sessaoVotacao = new SessaoVotacao(aberturaRequest, pauta);
+
+        VotoRequest votoRequest = VotoRequest.builder()
+                .cpfAssociado("123456789")
+                .build();
+
+        doNothing().when(associadoService).validaAssociadoAptoVoto(votoRequest.getCpfAssociado());
+
+        sessaoVotacao.validaAssociado(votoRequest.getCpfAssociado(), associadoService);
     }
 
+    @Test
+    void testValidaVotoDuplicado() {
+        Pauta pauta = Pauta.builder().build();
+        SessaoAberturaRequest aberturaRequest = SessaoAberturaRequest.builder()
+                .idPauta(UUID.randomUUID())
+                .build();
+
+        SessaoVotacao sessaoVotacao = new SessaoVotacao(aberturaRequest, pauta);
+
+        VotoRequest votoRequest = VotoRequest.builder()
+                .cpfAssociado("123456789")
+                .build();
+
+        sessaoVotacao.recebeVoto(votoRequest, associadoService, publicadorResultadoSessao);
+
+        assertThrows(RuntimeException.class, () -> sessaoVotacao.validaVotoDuplicado(votoRequest.getCpfAssociado()));
+    }
+
+    @Test
+    void testObtemResultado() {
+        Pauta pauta = Pauta.builder().build();
+        SessaoAberturaRequest aberturaRequest = SessaoAberturaRequest.builder()
+                .idPauta(UUID.randomUUID())
+                .build();
+
+        SessaoVotacao sessaoVotacao = new SessaoVotacao(aberturaRequest, pauta);
+
+        ResultadoSessaoResponse resultadoSessaoResponse = sessaoVotacao.obtemResultado(publicadorResultadoSessao);
+
+        assertNotNull(resultadoSessaoResponse);
+        assertEquals(sessaoVotacao.getId(), resultadoSessaoResponse.getIdSessao());
+        assertEquals(sessaoVotacao.getIdPauta(), resultadoSessaoResponse.getIdPauta());
+        assertEquals(sessaoVotacao.getStatus(), resultadoSessaoResponse.getStatus());
+        assertEquals(sessaoVotacao.getMomentoAbertura(), resultadoSessaoResponse.getMomentoAbertura());
+        assertEquals(sessaoVotacao.getMomentoEncerramento(), resultadoSessaoResponse.getMomentoEncerramento());
+        assertEquals(sessaoVotacao.getTotalVotos(), resultadoSessaoResponse.getTotalVotos());
+        assertEquals(sessaoVotacao.getTotalSim(), resultadoSessaoResponse.getTotalSim());
+        assertEquals(sessaoVotacao.getTotalNao(), resultadoSessaoResponse.getTotalNao());
+    }
 }

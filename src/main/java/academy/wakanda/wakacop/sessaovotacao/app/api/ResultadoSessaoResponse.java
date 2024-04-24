@@ -2,12 +2,14 @@ package academy.wakanda.wakacop.sessaovotacao.app.api;
 
 import academy.wakanda.wakacop.sessaovotacao.domain.SessaoVotacao;
 import academy.wakanda.wakacop.sessaovotacao.domain.StatusSessaoVotacao;
-import lombok.Data;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
+@Getter
+@ToString
 public class ResultadoSessaoResponse {
     private UUID idSessao;
     private UUID idPauta;
