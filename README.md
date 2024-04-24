@@ -30,7 +30,7 @@ Segurança > Disponibilidade > Escalabilidade
 - Docker e Docker Compose
 
 ## Como Executar o Projeto
-1. Clone o repositório: git clone: https://github.com/mardsantana/wakacop/tree/feature/teste-automatizados
+1. Clone o repositório: git clone: https://github.com/mardsantana/wakacop
 2. Navegue até a pasta do projeto: cd wakacop
 3. Construa o projeto com Maven: mvn clean install
 4. Inicie os serviços usando Docker Compose: docker-compose up
