@@ -5,9 +5,7 @@ import academy.wakanda.wakacop.associado.app.service.AssociadoService;
 import academy.wakanda.wakacop.pauta.app.domain.Pauta;
 import academy.wakanda.wakacop.sessaovotacao.app.api.ResultadoSessaoResponse;
 import academy.wakanda.wakacop.sessaovotacao.app.api.SessaoAberturaRequest;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -19,6 +17,8 @@ import java.util.*;
 @Data
 @Entity
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PACKAGE)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class SessaoVotacao {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -64,7 +64,7 @@ public class SessaoVotacao {
         }
     }
 
-    private void atualizaStatus(PublicadorResultadoSessao publicadorResultadoSessao) {
+    void atualizaStatus(PublicadorResultadoSessao publicadorResultadoSessao) {
         if (this.status.equals(StatusSessaoVotacao.ABERTA)){
             if (LocalDateTime.now().isAfter(this.momentoEncerramento)){
                 fechaSessao(publicadorResultadoSessao);
@@ -72,7 +72,7 @@ public class SessaoVotacao {
         }
     }
 
-    private void fechaSessao(PublicadorResultadoSessao publicadorResultadoSessao) {
+    void fechaSessao(PublicadorResultadoSessao publicadorResultadoSessao) {
         this.status = StatusSessaoVotacao.FECHADA;
         publicadorResultadoSessao.publica(new ResultadoSessaoResponse(this));
     }
